@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Public Relations Dashboard</h2>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">Summary Report</div>
+                <div class="card-body">
+                    <p>Total Complaints: <strong>{{ complaints|length }}</strong></p>
+                    <p>Resolution Rate: <strong>Coming soon...</strong></p> <!-- Placeholder for calculation logic -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Resolved Complaints Log</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Date Resolved</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td>{{ complaint.tracking_id }}</td>
+                        <td>{{ complaint.title }}</td>
+                        <td>{{ complaint.updated_at|date:"M d, Y" }}</td>
+                        <td><button class="btn btn-sm btn-light">View</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

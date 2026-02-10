@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\core",
+    "\\core\\migrations",
+    "\\core\\templates",
+    "\\core\\templates\\core",
+    "\\municipal_project",
+    "\\static",
+    "\\static\\css",
+    "\\static\\images",
+    "\\static\\js"
+  ],
+  "PreviewInSolutionExplorer": false
+}

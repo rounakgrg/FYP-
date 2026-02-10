@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4"><i class="bi bi-journal-richtext"></i> Municipal Service Charter</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <input type="text" class="form-control form-control-lg" placeholder="Search services...">
+        </div>
+    </div>
+
+    {% for service in services %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h4 class="card-title text-primary">{{ service.title }}</h4>
+                    <p class="card-text">{{ service.description }}</p>
+                </div>
+                <span class="badge bg-info text-dark">{{ service.processing_time }}</span>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <small class="fw-bold">Requirements:</small>
+                    <p class="small mb-0">{{ service.requirements }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="fw-bold">Fee:</small>
+                    <p class="lead mb-0">${{ service.fee }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">No services found in the charter.</div>
+    {% endfor %}
+</div>
+{% endblock %}

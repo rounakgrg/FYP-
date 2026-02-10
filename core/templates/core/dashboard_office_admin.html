@@ -1,0 +1,114 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% if is_super_admin %}
+<div class="theme-super-admin">
+    {% endif %}
+
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                {% if is_super_admin %}
+                <h1 class="h3 mb-1 text-danger fw-bold">All Complaints (Super Admin View)</h1>
+                {% else %}
+                <h1 class="h2 mb-1">Office Administration</h1>
+                {% endif %}
+                <p class="text-muted">Overview of all municipal complaints.</p>
+            </div>
+
+            {% if is_super_admin %}
+            <a href="{% url 'dashboard_super_admin' %}" class="btn btn-outline-danger">Back to Dashboard</a>
+            {% else %}
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary"><i class="bi bi-download me-2"></i> Export Report</button>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if is_super_admin %}
+        <!-- Navigation Tabs for Super Admin -->
+        <ul class="nav nav-pills mb-4 gap-2 d-inline-flex bg-white p-2 rounded shadow-sm">
+            <li class="nav-item">
+                <a class="nav-link text-secondary" href="{% url 'dashboard_super_admin' %}"><i
+                        class="bi bi-speedometer2 me-2"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-secondary" href="{% url 'admin_users' %}"><i class="bi bi-people me-2"></i> User
+                    Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-secondary" href="{% url 'admin_services' %}"><i
+                        class="bi bi-file-text me-2"></i> Service Charter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active bg-danger text-white" href="#"><i class="bi bi-shield-check me-2"></i> All
+                    Complaints</a>
+            </li>
+        </ul>
+        {% else %}
+        <!-- Stats Row for Office Admin -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small fw-bold">Total</h6>
+                        <h2 class="mb-0">{{ complaints|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more stats here -->
+        </div>
+        {% endif %}
+
+        <!-- Complaints Table -->
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 text-nowrap">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Tracking ID</th>
+                            <th>Title</th>
+                            <th>Citizen</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td class="ps-4"><span class="font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-medium">{{ complaint.title }}</div>
+                            </td>
+                            <td>{{ complaint.citizen.username }}</td>
+                            <td>{{ complaint.department.name }}</td>
+                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display
+                                    }}</span></td>
+                            <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4">
+                                <form action="{% url 'track_complaint' %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tracking_id" value="{{ complaint.tracking_id }}">
+                                    <button type="submit" class="btn btn-sm btn-light text-primary">View</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if is_super_admin %}
+</div>
+<script>
+    document.body.classList.add('theme-super-admin');
+</script>
+{% endif %}
+
+{% endblock %}

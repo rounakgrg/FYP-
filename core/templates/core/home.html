@@ -1,0 +1,130 @@
+.\venv\Scripts\Activate{% extends 'core/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient py-5 mb-5 text-center text-lg-start">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 slide-in-down">
+                <span
+                    class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 mb-3">
+                    <i class="bi bi-stars me-1"></i> Citizens First
+                </span>
+                <h1 class="display-3 fw-bold mb-3 ls-tight text-white">
+                    Better Services for <br>
+                    <span class="text-primary text-opacity-75">A Better City</span>
+                </h1>
+                <p class="lead text-secondary text-opacity-75 mb-4" style="color: #94a3b8 !important;">
+                    Streamline your municipal requests. Report issues, track status, and access services—all in one
+                    secure portal.
+                </p>
+                <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{% url 'file_complaint' %}" class="btn btn-primary btn-lg px-4 shadow-lg">
+                        <i class="bi bi-megaphone me-2"></i> Report Issue
+                    </a>
+                    <a href="{% url 'service_charter' %}" class="btn btn-outline-light btn-lg px-4">
+                        View Services
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <!-- Abstract Illustration Placeholder -->
+                <div class="row g-3">
+                    <div class="col-6 mt-5 pt-5">
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-3">
+                            <i class="bi bi-clipboard-check display-4 mb-2 text-success"></i>
+                            <h5>Real-time Tracking</h5>
+                            <small class="text-white-50">Stay updated on every step.</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-3">
+                            <i class="bi bi-shield-check display-4 mb-2 text-info"></i>
+                            <h5>Digital Services</h5>
+                            <small class="text-white-50">Secure and accessible 24/7.</small>
+                        </div>
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white">
+                            <i class="bi bi-people display-4 mb-2 text-warning"></i>
+                            <h5>Community First</h5>
+                            <small class="text-white-50">Building together.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="{% url 'service_charter' %}" class="text-decoration-none">
+                <div class="card h-100 p-4 border-start border-4 border-primary">
+                    <div class="card-body">
+                        <div
+                            class="d-inline-flex align-items-center justify-content-center p-3 bg-primary bg-opacity-10 rounded-circle mb-3 text-primary">
+                            <i class="bi bi-journal-text fs-4"></i>
+                        </div>
+                        <h3>Service Charter</h3>
+                        <p class="text-muted">Browse our complete list of services, requirements, and estimated
+                            processing times.</p>
+                        <span class="text-primary fw-bold">Explore <i class="bi bi-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'file_complaint' %}" class="text-decoration-none">
+                <div class="card h-100 p-4 border-start border-4 border-success">
+                    <div class="card-body">
+                        <div
+                            class="d-inline-flex align-items-center justify-content-center p-3 bg-success bg-opacity-10 rounded-circle mb-3 text-success">
+                            <i class="bi bi-pencil-square fs-4"></i>
+                        </div>
+                        <h3>File Complaint</h3>
+                        <p class="text-muted">Encountered an issue? Submit a detailed report and let us handle the rest.
+                        </p>
+                        <span class="text-success fw-bold">Submit Now <i class="bi bi-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'track_complaint' %}" class="text-decoration-none">
+                <div class="card h-100 p-4 border-start border-4 border-warning">
+                    <div class="card-body">
+                        <div
+                            class="d-inline-flex align-items-center justify-content-center p-3 bg-warning bg-opacity-10 rounded-circle mb-3 text-warning">
+                            <i class="bi bi-search fs-4"></i>
+                        </div>
+                        <h3>Track Status</h3>
+                        <p class="text-muted">Enter your tracking ID to see the real-time progress of your request.</p>
+                        <span class="text-warning fw-bold">Check Status <i class="bi bi-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="container mb-5">
+    <div class="card border-0 bg-white shadow-sm overflow-hidden">
+        <div class="row text-center g-0">
+            <div class="col-md-4 p-5 border-end border-light">
+                <h2 class="display-4 fw-bold text-primary mb-0">2,450+</h2>
+                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">Complaints Resolved</p>
+            </div>
+            <div class="col-md-4 p-5 border-end border-light">
+                <h2 class="display-4 fw-bold text-success mb-0">95%</h2>
+                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">User Satisfaction</p>
+            </div>
+            <div class="col-md-4 p-5">
+                <h2 class="display-4 fw-bold text-dark mb-0">24h</h2>
+                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">Avg. Response Time</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
