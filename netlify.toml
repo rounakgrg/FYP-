@@ -3,7 +3,7 @@
   publish = "staticfiles"
 
 [build.environment]
-  PYTHON_VERSION = "3.9"
+  PYTHON_VERSION = "3.9.18"
 
 [dev]
   command = "python manage.py runserver"
