@@ -13,4 +13,14 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "municipal_project.settings")
 
+# Failsafe: Run migrations and setup_data if tables are missing (for Render SQLite fallback)
+import sys
+from django.core.management import call_command
+
+try:
+    call_command("migrate")
+    call_command("setup_data")
+except Exception as e:
+    print(f"WSGI Startup Error: {e}", file=sys.stderr)
+
 application = get_wsgi_application()
