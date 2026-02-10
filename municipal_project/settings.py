@@ -85,10 +85,16 @@ if os.environ.get("DATABASE_URL"):
     }
 else:
     # Fallback to SQLite if no remote database is configured
+    # Usage of /tmp ensures write permissions on Render's ephemeral filesystem
+    db_path = BASE_DIR / "db.sqlite3"
+    if os.environ.get("RENDER"):
+        import tempfile
+        db_path = Path(tempfile.gettempdir()) / "db.sqlite3"
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": db_path,
         }
     }
 
