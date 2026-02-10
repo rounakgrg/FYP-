@@ -76,12 +76,21 @@ WSGI_APPLICATION = "municipal_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default="mysql://user:1234@localhost:3306/municipal_db",
-        conn_max_age=600
-    )
-}
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default="mysql://user:1234@localhost:3306/municipal_db",
+            conn_max_age=600
+        )
+    }
+else:
+    # Fallback to SQLite if no remote database is configured
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 
