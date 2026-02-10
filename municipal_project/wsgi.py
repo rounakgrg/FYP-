@@ -22,8 +22,7 @@ from django.core.management import call_command
 django.setup()
 
 try:
-    # Check if we need to migrate (simple check to avoid concurrency spam if possible, 
-    # but migrate is idempotent so calling it is safe-ish)
+    # Check if we need to migrate
     print("Running startup migrations...", file=sys.stderr)
     call_command("migrate")
     call_command("setup_data")
