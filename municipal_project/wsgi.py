@@ -8,11 +8,14 @@ https://docs.djangoproject.com/en/6.0/howto/deployment/wsgi/
 """
 
 import os
+import sys
+
+# Set settings module BEFORE any Django imports
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "municipal_project.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "municipal_project.settings"
+print(f"DEBUG: DJANGO_SETTINGS_MODULE set to: {os.environ.get('DJANGO_SETTINGS_MODULE')}", file=sys.stderr)
 
 from django.core.wsgi import get_wsgi_application
-
-# Failsafe: Run migrations and setup_data if tables are missing (for Render SQLite fallback)
-import sys
 import django
 from django.core.management import call_command
 
