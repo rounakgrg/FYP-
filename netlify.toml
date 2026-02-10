@@ -1,0 +1,6 @@
+[build]
+  command = "python manage.py collectstatic --noinput"
+  publish = "staticfiles"
+
+[dev]
+  command = "python manage.py runserver"

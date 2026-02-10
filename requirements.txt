@@ -1,3 +1,5 @@
 Django
 pymysql
 cryptography
+whitenoise
+gunicorn
