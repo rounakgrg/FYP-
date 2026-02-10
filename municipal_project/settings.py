@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#53gdlk==4$nf9%@b*=d7o)+ico2*jew*f%kjv%(4te#%(nnb+"
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-#53gdlk==4$nf9%@b*=d7o)+ico2*jew*f%kjv%(4te#%(nnb+")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 
 # Application definition
@@ -75,14 +77,10 @@ WSGI_APPLICATION = "municipal_project.wsgi.application"
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "municipal_db",
-        "USER": "user",
-        "PASSWORD": "1234",
-        "HOST": "localhost",
-        "PORT": "3306",
-    }
+    "default": dj_database_url.config(
+        default="mysql://user:1234@localhost:3306/municipal_db",
+        conn_max_age=600
+    )
 }
 
 
@@ -112,6 +110,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
