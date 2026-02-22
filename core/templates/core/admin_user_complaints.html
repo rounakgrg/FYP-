@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block title %}User Complaints - {{ target_user.username }}{% endblock %}
+
+{% block content %}
+<div class="theme-super-admin">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="h3 mb-1 text-danger fw-bold">Complaints by {{ target_user.username|title }}</h1>
+                <p class="text-muted">Total Complaints: <span class="badge bg-danger rounded-pill">{{ complaints.count
+                        }}</span></p>
+            </div>
+            <a href="{% url 'admin_users' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>
+                Back to Users</a>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 text-nowrap">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Tracking ID</th>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>IP Address</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td class="ps-4"><span class="font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-medium">{{ complaint.title }}</div>
+                            </td>
+                            <td>{{ complaint.location|default:"-" }}</td>
+                            <td>{% if complaint.department %}{{ complaint.department.name }}{% else %}-{% endif %}</td>
+                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display
+                                    }}</span></td>
+                            <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                            <td>{{ complaint.ip_address|default:"-" }}</td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'admin_complaint_detail' complaint.pk %}"
+                                    class="btn btn-sm btn-light text-primary"><i class="bi bi-eye"></i> View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">No complaints filed by this user.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.body.classList.add('theme-super-admin');
+</script>
+{% endblock %}

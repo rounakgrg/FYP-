@@ -1,0 +1,176 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Complaint Details - #{{ complaint.tracking_id }}{% endblock %}
+
+{% block content %}
+<div class="{% if is_super_admin %}theme-super-admin{% endif %}">
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1 fw-bold {% if is_super_admin %}text-danger{% endif %}">Complaint Details</h1>
+                <p class="text-muted">Tracking ID: <span class="font-monospace fw-bold text-dark">#{{
+                        complaint.tracking_id }}</span></p>
+            </div>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>
+                Back</a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Overview Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h4 class="fw-bold text-primary mb-0">{{ complaint.title }}</h4>
+                            <span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display
+                                }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4"><i class="bi bi-calendar3 me-2"></i> Submitted on {{
+                            complaint.created_at|date:"F d, Y, h:i A" }}</p>
+
+                        <h6 class="fw-bold text-secondary text-uppercase small mb-2">Description</h6>
+                        <div class="p-3 bg-light rounded text-dark fs-6 lh-lg mb-4">
+                            {{ complaint.description|linebreaksbr }}
+                        </div>
+
+                        {% if complaint.location %}
+                        <h6 class="fw-bold text-secondary text-uppercase small mb-2"><i
+                                class="bi bi-geo-alt-fill text-danger me-1"></i> Location</h6>
+                        <p class="mb-4">{{ complaint.location }}</p>
+                        {% endif %}
+
+                        {% if complaint.image %}
+                        <h6 class="fw-bold text-secondary text-uppercase small mb-2"><i
+                                class="bi bi-image text-primary me-1"></i> Attached Evidence</h6>
+                        <div class="mb-3 text-center bg-light rounded p-2">
+                            <a href="{{ complaint.image.url }}" target="_blank">
+                                <img src="{{ complaint.image.url }}" alt="Complaint Image"
+                                    class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: contain;">
+                            </a>
+                            <p class="text-muted small mt-2 mb-0">Click image to view full size</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Timeline / Remarks Card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white pt-4 pb-2">
+                        <h5 class="fw-bold mb-0">Updates & Action Timeline</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if complaint.remarks.exists %}
+                        <div class="timeline">
+                            {% for remark in complaint.remarks.all %}
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3 flex-grow-1">
+                                    <div class="bg-light rounded p-3 position-relative">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0 fw-bold">{{ remark.user.username|title }} <small
+                                                    class="text-muted ms-1 fw-normal">({{ remark.user.get_role_display
+                                                    }})</small></h6>
+                                            <span class="text-muted small">{{ remark.created_at|date:"M d, Y h:i A"
+                                                }}</span>
+                                        </div>
+                                        <p class="mb-0 text-dark">{{ remark.remark|linebreaksbr }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-chat-square-text fs-1 mb-2"></i>
+                            <p>No remarks or updates have been added yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Citizen Info Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white pt-4 pb-0 border-bottom-0">
+                        <h5 class="fw-bold"><i class="bi bi-person-badge text-primary me-2"></i> Citizen Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Name</span>
+                                <span class="fw-medium">{{ complaint.citizen.username|title }}</span>
+                            </li>
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Email</span>
+                                <span>{{ complaint.citizen.email|default:"Not provided" }}</span>
+                            </li>
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                <span class="text-muted">User ID</span>
+                                <span>#{{ complaint.citizen.id }}</span>
+                            </li>
+                        </ul>
+                        <div class="mt-3 text-center">
+                            <a href="{% url 'admin_user_complaints' complaint.citizen.id %}"
+                                class="btn btn-sm btn-outline-primary w-100">View All by Citizen</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assignment Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white pt-4 pb-0 border-bottom-0">
+                        <h5 class="fw-bold"><i class="bi bi-building text-info me-2"></i> Assignment Info</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-0 d-flex flex-column">
+                                <span class="text-muted small mb-1">Department</span>
+                                <span class="fw-medium fs-6">{% if complaint.department %}{{ complaint.department.name
+                                    }}{% else %}<span class="text-warning"><i class="bi bi-exclamation-triangle"></i>
+                                        Unassigned</span>{% endif %}</span>
+                            </li>
+                            <li class="list-group-item px-0 d-flex flex-column">
+                                <span class="text-muted small mb-1">Assigned Officer</span>
+                                <span class="fw-medium">{% if complaint.assigned_to %}{{
+                                    complaint.assigned_to.username|title }}{% else %}Not Assigned{% endif %}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Technical Details Card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white pt-4 pb-0 border-bottom-0">
+                        <h5 class="fw-bold"><i class="bi bi-laptop text-secondary me-2"></i> Technical Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-0 d-flex flex-column">
+                                <span class="text-muted small mb-1">IP Address</span>
+                                <span class="font-monospace small">{{ complaint.ip_address|default:"Not recorded"
+                                    }}</span>
+                            </li>
+                            <li class="list-group-item px-0 pb-0 border-0 d-flex flex-column">
+                                <span class="text-muted small mb-1">Browser Info</span>
+                                <span class="text-muted small" style="word-break: break-word;">{{
+                                    complaint.browser_info|default:"Not recorded" }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

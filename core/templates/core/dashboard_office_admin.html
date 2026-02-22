@@ -69,6 +69,7 @@
                         <tr>
                             <th class="ps-4">Tracking ID</th>
                             <th>Title</th>
+                            <th>Location</th>
                             <th>Citizen</th>
                             <th>Department</th>
                             <th>Status</th>
@@ -84,17 +85,15 @@
                             <td>
                                 <div class="fw-medium">{{ complaint.title }}</div>
                             </td>
+                            <td>{{ complaint.location|default:"-" }}</td>
                             <td>{{ complaint.citizen.username }}</td>
                             <td>{{ complaint.department.name }}</td>
                             <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display
                                     }}</span></td>
                             <td>{{ complaint.created_at|date:"M d, Y" }}</td>
                             <td class="text-end pe-4">
-                                <form action="{% url 'track_complaint' %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="tracking_id" value="{{ complaint.tracking_id }}">
-                                    <button type="submit" class="btn btn-sm btn-light text-primary">View</button>
-                                </form>
+                                <a href="{% url 'admin_complaint_detail' complaint.pk %}"
+                                    class="btn btn-sm btn-light text-primary"><i class="bi bi-eye me-1"></i> View</a>
                             </td>
                         </tr>
                         {% endfor %}

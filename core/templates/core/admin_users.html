@@ -44,6 +44,7 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Department/Section</th>
+                            <th>Total Complaints</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
@@ -64,6 +65,13 @@
                             </td>
                             <td class="text-muted">
                                 {% if user.department %}{{ user.department.name }}{% else %}-{% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary rounded-pill me-2">{{ user.complaints.count }}</span>
+                                <a href="{% url 'admin_user_complaints' user.pk %}"
+                                    class="btn btn-sm btn-outline-danger" title="View Complaints">
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
                             </td>
                             <td class="text-end pe-4">
                                 <button class="btn btn-sm btn-light text-primary"><i

@@ -45,6 +45,8 @@ def file_complaint(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         dept_id = request.POST.get('department')
+        location = request.POST.get('location')
+        image = request.FILES.get('image')
         
         # for demo, if user not logged in, we might need a dummy user or require login
         # Plan says "Citizen" role. If user is anon, maybe redirect to login or create anon user?
@@ -61,7 +63,11 @@ def file_complaint(request):
             title=title,
             description=description,
             citizen=request.user,
-            department=department
+            department=department,
+            location=location,
+            image=image,
+            ip_address=request.META.get('REMOTE_ADDR'),
+            browser_info=request.META.get('HTTP_USER_AGENT')
         )
         messages.success(request, f"Complaint submitted! Tracking ID: {complaint.tracking_id}")
         return redirect('track_complaint')
@@ -141,6 +147,29 @@ def admin_complaints(request):
     # Better to make a new simple template or reuse logic.
     # For now, let's duplicate the layout for consistency with tabs.
     return render(request, 'core/dashboard_office_admin.html', {'complaints': complaints, 'is_super_admin': True})
+
+@login_required
+def admin_user_complaints(request, pk):
+    if not request.user.is_super_admin():
+        return redirect('dashboard')
+    target_user = get_object_or_404(User, pk=pk)
+    complaints = Complaint.objects.filter(citizen=target_user).order_by('-created_at')
+    
+    return render(request, 'core/admin_user_complaints.html', {
+        'target_user': target_user,
+        'complaints': complaints
+    })
+
+@login_required
+def admin_complaint_detail(request, pk):
+    # Allow office admins, section users, super admins to view
+    if request.user.is_citizen():
+        return redirect('dashboard')
+    complaint = get_object_or_404(Complaint, pk=pk)
+    return render(request, 'core/admin_complaint_detail.html', {
+        'complaint': complaint, 
+        'is_super_admin': request.user.is_super_admin()
+    })
 
 @login_required
 def admin_user_add(request):

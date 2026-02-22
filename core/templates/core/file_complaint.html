@@ -9,12 +9,23 @@
                     <h4 class="mb-0"><i class="bi bi-pencil-square"></i> File a Complaint</h4>
                 </div>
                 <div class="card-body p-4">
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label class="form-label">Complaint Title</label>
                             <input type="text" name="title" class="form-control" required
                                 placeholder="e.g. Broken Streetlight on Main St">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control"
+                                placeholder="e.g. Near Central Park entrance">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Attach Image (Optional)</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
 
                         <div class="mb-3">
