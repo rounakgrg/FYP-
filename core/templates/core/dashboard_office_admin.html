@@ -88,8 +88,7 @@
                             <td>{{ complaint.location|default:"-" }}</td>
                             <td>{{ complaint.citizen.username }}</td>
                             <td>{{ complaint.department.name }}</td>
-                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display
-                                    }}</span></td>
+                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></td>
                             <td>{{ complaint.created_at|date:"M d, Y" }}</td>
                             <td class="text-end pe-4">
                                 <a href="{% url 'admin_complaint_detail' complaint.pk %}"
