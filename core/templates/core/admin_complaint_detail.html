@@ -9,8 +9,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h3 mb-1 fw-bold {% if is_super_admin %}text-danger{% endif %}">Complaint Details</h1>
-                <p class="text-muted">Tracking ID: <span class="font-monospace fw-bold text-dark">#{{
-                        complaint.tracking_id }}</span></p>
+                <p class="text-muted">Tracking ID: <span class="font-monospace fw-bold text-dark">#{{ complaint.tracking_id }}</span></p>
             </div>
             <a href="javascript:history.back()" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>
                 Back</a>
@@ -28,8 +27,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted mb-4"><i class="bi bi-calendar3 me-2"></i> Submitted on {{
-                            complaint.created_at|date:"F d, Y, h:i A" }}</p>
+                        <p class="text-muted mb-4"><i class="bi bi-calendar3 me-2"></i> Submitted on {{ complaint.created_at|date:"F d, Y, h:i A" }}</p>
 
                         <h6 class="fw-bold text-secondary text-uppercase small mb-2">Description</h6>
                         <div class="p-3 bg-light rounded text-dark fs-6 lh-lg mb-4">
@@ -77,8 +75,7 @@
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <h6 class="mb-0 fw-bold">{{ remark.user.username|title }} <small
                                                     class="text-muted ms-1 fw-normal">({{ remark.user.get_role_display }})</small></h6>
-                                            <span class="text-muted small">{{ remark.created_at|date:"M d, Y h:i A"
-                                                }}</span>
+                                            <span class="text-muted small">{{ remark.created_at|date:"M d, Y h:i A" }}</span>
                                         </div>
                                         <p class="mb-0 text-dark">{{ remark.remark|linebreaksbr }}</p>
                                     </div>
@@ -134,14 +131,12 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item px-0 d-flex flex-column">
                                 <span class="text-muted small mb-1">Department</span>
-                                <span class="fw-medium fs-6">{% if complaint.department %}{{ complaint.department.name
-                                    }}{% else %}<span class="text-warning"><i class="bi bi-exclamation-triangle"></i>
+                                <span class="fw-medium fs-6">{% if complaint.department %}{{ complaint.department.name }}{% else %}<span class="text-warning"><i class="bi bi-exclamation-triangle"></i>
                                         Unassigned</span>{% endif %}</span>
                             </li>
                             <li class="list-group-item px-0 d-flex flex-column">
                                 <span class="text-muted small mb-1">Assigned Officer</span>
-                                <span class="fw-medium">{% if complaint.assigned_to %}{{
-                                    complaint.assigned_to.username|title }}{% else %}Not Assigned{% endif %}</span>
+                                <span class="fw-medium">{% if complaint.assigned_to %}{{ complaint.assigned_to.username|title }}{% else %}Not Assigned{% endif %}</span>
                             </li>
                         </ul>
                     </div>
@@ -156,13 +151,11 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item px-0 d-flex flex-column">
                                 <span class="text-muted small mb-1">IP Address</span>
-                                <span class="font-monospace small">{{ complaint.ip_address|default:"Not recorded"
-                                    }}</span>
+                                <span class="font-monospace small">{{ complaint.ip_address|default:"Not recorded" }}</span>
                             </li>
                             <li class="list-group-item px-0 pb-0 border-0 d-flex flex-column">
                                 <span class="text-muted small mb-1">Browser Info</span>
-                                <span class="text-muted small" style="word-break: break-word;">{{
-                                    complaint.browser_info|default:"Not recorded" }}</span>
+                                <span class="text-muted small" style="word-break: break-word;">{{ complaint.browser_info|default:"Not recorded" }}</span>
                             </li>
                         </ul>
                     </div>

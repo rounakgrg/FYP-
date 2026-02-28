@@ -59,8 +59,7 @@
                         </td>
                         <td>
                             <div class="fw-medium text-dark">{{ complaint.title }}</div>
-                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">{{
-                                complaint.description }}</small>
+                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">{{ complaint.description }}</small>
                         </td>
                         <td>{{ complaint.created_at|date:"M d, Y" }}</td>
                         <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></td>
