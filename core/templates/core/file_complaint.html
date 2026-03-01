@@ -19,8 +19,14 @@
 
                         <div class="mb-3">
                             <label class="form-label">Location</label>
-                            <input type="text" name="location" class="form-control"
-                                placeholder="e.g. Near Central Park entrance">
+                            <input type="text" id="id_location" name="location" class="form-control"
+                                placeholder="Select a location on the map or use the search icon..." readonly>
+                            <small class="text-muted d-block mb-2">Click on the map to pin a location, or use the search
+                                icon on the right side of the map.</small>
+                            <div class="position-relative">
+                                <div id="map" style="height: 350px; width: 100%; z-index: 1;" class="rounded border">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -53,4 +59,82 @@
         </div>
     </div>
 </div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<!-- Leaflet Control Geocoder CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- Leaflet Control Geocoder JS -->
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const defaultLocation = [27.7172, 85.3240]; // Kathmandu, Nepal
+        const map = L.map('map').setView(defaultLocation, 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let currentMarker = null;
+        const locationInput = document.getElementById('id_location');
+
+        // Add Geocoder control (Search box)
+        const geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false
+        })
+            .on('markgeocode', function (e) {
+                const bbox = e.geocode.bbox;
+                const poly = L.polygon([
+                    bbox.getSouthEast(),
+                    bbox.getNorthEast(),
+                    bbox.getNorthWest(),
+                    bbox.getSouthWest()
+                ]);
+                map.fitBounds(poly.getBounds());
+
+                updateMarker(e.geocode.center, e.geocode.name);
+            })
+            .addTo(map);
+
+        // Map click event
+        map.on('click', function (e) {
+            const latlng = e.latlng;
+
+            // Reverse geocoding (convert coordinates to address) using Nominatim
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    let address = data.display_name;
+                    if (!address) {
+                        address = `${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`;
+                    }
+                    updateMarker(latlng, address);
+                })
+                .catch(error => {
+                    console.error("Reverse geocoding failed:", error);
+                    updateMarker(latlng, `${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`);
+                });
+        });
+
+        function updateMarker(latlng, locationName) {
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            currentMarker = L.marker(latlng).addTo(map);
+            currentMarker.bindPopup(locationName).openPopup();
+
+            // Update the hidden/readonly input field with the location text
+            locationInput.value = locationName;
+        }
+    });
+</script>
 {% endblock %}
