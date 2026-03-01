@@ -41,7 +41,7 @@
                             </td>
                             <td>{{ complaint.location|default:"-" }}</td>
                             <td>{% if complaint.department %}{{ complaint.department.name }}{% else %}-{% endif %}</td>
-                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></td>
+                            <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.status|title }}</span></td>
                             <td>{{ complaint.created_at|date:"M d, Y" }}</td>
                             <td>{{ complaint.ip_address|default:"-" }}</td>
                             <td class="text-end pe-4">

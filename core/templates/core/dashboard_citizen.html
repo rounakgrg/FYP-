@@ -62,7 +62,7 @@
                             <small class="text-muted d-block text-truncate" style="max-width: 250px;">{{ complaint.description }}</small>
                         </td>
                         <td>{{ complaint.created_at|date:"M d, Y" }}</td>
-                        <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></td>
+                        <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.status|title }}</span></td>
                         <td class="text-end pe-4">
                             <form action="{% url 'track_complaint' %}" method="post" class="d-inline">
                                 {% csrf_token %}

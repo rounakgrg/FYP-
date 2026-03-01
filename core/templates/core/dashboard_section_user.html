@@ -21,7 +21,7 @@
                     <td><code>{{ complaint.tracking_id }}</code></td>
                     <td>{{ complaint.title }}</td>
                     <td>{{ complaint.department.name }}</td>
-                    <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.get_status_display }}</span></td>
+                    <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.status|title }}</span></td>
                     <td>
                         <a href="#" class="btn btn-sm btn-outline-primary">Update Status</a>
                     </td>
