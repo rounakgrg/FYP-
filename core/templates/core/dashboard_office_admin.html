@@ -95,6 +95,16 @@
         </div>
         {% endif %}
 
+        <!-- Complaints Table Header with Search -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0 text-secondary fw-bold">Recent Complaints</h4>
+            <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="tableSearch" class="form-control border-start-0 ps-0"
+                    placeholder="Search by ID, title, or status...">
+            </div>
+        </div>
+
         <!-- Complaints Table -->
         <div class="card shadow-sm border-0">
             <div class="table-responsive">
@@ -111,9 +121,9 @@
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="complaintsTableBody">
                         {% for complaint in complaints %}
-                        <tr>
+                        <tr class="complaint-row">
                             <td class="ps-4"><span class="font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
                             </td>
                             <td>
@@ -142,5 +152,22 @@
     document.body.classList.add('theme-super-admin');
 </script>
 {% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('tableSearch');
+        const tableRows = document.querySelectorAll('.complaint-row');
+
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function () {
+                const searchTerm = this.value.toLowerCase();
+                tableRows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            });
+        }
+    });
+</script>
 
 {% endblock %}
