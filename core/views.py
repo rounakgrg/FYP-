@@ -91,6 +91,8 @@ def dashboard(request):
     user = request.user
     if user.is_citizen():
         complaints = Complaint.objects.filter(citizen=user)
+        pending_count = 0
+        resolved_count = 0
         template = 'core/dashboard_citizen.html'
     elif user.is_office_admin():
         complaints = Complaint.objects.all().order_by('-created_at')
