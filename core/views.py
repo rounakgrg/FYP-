@@ -166,9 +166,48 @@ def admin_complaint_detail(request, pk):
     if request.user.is_citizen():
         return redirect('dashboard')
     complaint = get_object_or_404(Complaint, pk=pk)
+    
+    from .forms import ComplaintAssignmentForm, ComplaintStatusUpdateForm
+    
+    assign_form = None
+    status_form = None
+    
+    can_assign = request.user.is_office_admin() or request.user.is_super_admin()
+    can_update = request.user.is_section_user() or request.user.is_office_admin() or request.user.is_super_admin()
+    
+    if request.method == 'POST':
+        if 'assign' in request.POST and can_assign:
+            assign_form = ComplaintAssignmentForm(request.POST, instance=complaint)
+            if assign_form.is_valid():
+                assign_form.save()
+                messages.success(request, 'Complaint assignment updated.')
+                return redirect('admin_complaint_detail', pk=pk)
+        elif 'update_status' in request.POST and can_update:
+            status_form = ComplaintStatusUpdateForm(request.POST, instance=complaint)
+            if status_form.is_valid():
+                complaint = status_form.save()
+                remark_text = status_form.cleaned_data.get('remark')
+                if remark_text:
+                    ComplaintRemark.objects.create(
+                        complaint=complaint,
+                        user=request.user,
+                        remark=remark_text
+                    )
+                messages.success(request, 'Complaint status updated.')
+                return redirect('admin_complaint_detail', pk=pk)
+
+    if can_assign:
+        assign_form = ComplaintAssignmentForm(instance=complaint) if assign_form is None else assign_form
+    if can_update:
+        status_form = ComplaintStatusUpdateForm(instance=complaint) if status_form is None else status_form
+        
     return render(request, 'core/admin_complaint_detail.html', {
         'complaint': complaint, 
-        'is_super_admin': request.user.is_super_admin()
+        'is_super_admin': request.user.is_super_admin(),
+        'assign_form': assign_form,
+        'status_form': status_form,
+        'can_assign': can_assign,
+        'can_update': can_update
     })
 
 @login_required
