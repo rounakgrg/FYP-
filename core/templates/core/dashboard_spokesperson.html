@@ -36,7 +36,8 @@
                         <td>{{ complaint.tracking_id }}</td>
                         <td>{{ complaint.title }}</td>
                         <td>{{ complaint.updated_at|date:"M d, Y" }}</td>
-                        <td><button class="btn btn-sm btn-light">View</button></td>
+                        <td><a href="{% url 'admin_complaint_detail' complaint.pk %}"
+                                class="btn btn-sm btn-light">View</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
