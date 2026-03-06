@@ -50,7 +50,8 @@
         <!-- Stats Row for Office Admin -->
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-primary text-white h-100">
+                <div class="card border-0 shadow-sm bg-primary text-white h-100 stat-card" style="cursor: pointer;"
+                    data-filter="">
                     <div class="card-body py-4 d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-uppercase small fw-bold mb-2 opacity-75">Total Complaints</h6>
@@ -65,7 +66,8 @@
             </div>
 
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-warning text-dark h-100">
+                <div class="card border-0 shadow-sm bg-warning text-dark h-100 stat-card" style="cursor: pointer;"
+                    data-filter="pending">
                     <div class="card-body py-4 d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-uppercase small fw-bold mb-2 opacity-75">Pending Action</h6>
@@ -79,7 +81,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-success text-white h-100">
+                <div class="card border-0 shadow-sm bg-success text-white h-100 stat-card" style="cursor: pointer;"
+                    data-filter="resolved">
                     <div class="card-body py-4 d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-uppercase small fw-bold mb-2 opacity-75">Resolved Complaints</h6>
@@ -157,16 +160,30 @@
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('tableSearch');
         const tableRows = document.querySelectorAll('.complaint-row');
+        const statCards = document.querySelectorAll('.stat-card');
+
+        function filterTable(searchTerm) {
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
 
         if (searchInput) {
             searchInput.addEventListener('keyup', function () {
-                const searchTerm = this.value.toLowerCase();
-                tableRows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
+                filterTable(this.value.toLowerCase());
             });
         }
+
+        statCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const filterTerm = this.getAttribute('data-filter') || '';
+                if (searchInput) {
+                    searchInput.value = filterTerm;
+                    filterTable(filterTerm.toLowerCase());
+                }
+            });
+        });
     });
 </script>
 
