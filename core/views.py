@@ -94,20 +94,32 @@ def dashboard(request):
         template = 'core/dashboard_citizen.html'
     elif user.is_office_admin():
         complaints = Complaint.objects.all().order_by('-created_at')
+        pending_count = complaints.filter(status='PENDING').count()
+        resolved_count = complaints.filter(status='RESOLVED').count()
         template = 'core/dashboard_office_admin.html'
     elif user.is_section_user():
         complaints = Complaint.objects.filter(assigned_to=user)
+        pending_count = complaints.filter(status='PENDING').count()
+        resolved_count = complaints.filter(status='RESOLVED').count()
         template = 'core/dashboard_section_user.html'
     elif user.is_spokesperson():
         complaints = Complaint.objects.filter(status='RESOLVED') # Example filter
+        pending_count = 0
+        resolved_count = complaints.count()
         template = 'core/dashboard_spokesperson.html'
     elif user.is_super_admin():
          return redirect('dashboard_super_admin')
     else:
         complaints = []
+        pending_count = 0
+        resolved_count = 0
         template = 'core/dashboard_citizen.html' # Fallback
         
-    return render(request, template, {'complaints': complaints})
+    return render(request, template, {
+        'complaints': complaints,
+        'pending_count': pending_count,
+        'resolved_count': resolved_count
+    })
 
 @login_required
 def dashboard_super_admin(request):
