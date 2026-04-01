@@ -100,6 +100,22 @@ else:
 
 
 
+# Email Configuration for Production/Development
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# You must provide these in your environment variables for it to work!
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "your-email@gmail.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "your-app-password")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 

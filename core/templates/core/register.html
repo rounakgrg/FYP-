@@ -1,44 +1,77 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow border-0">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <i class="bi bi-person-plus display-1 text-primary"></i>
-                        <h3 class="mt-3">Create Account</h3>
-                        <p class="text-muted">Register as a Citizen</p>
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-person-plus-fill display-4 text-primary"></i>
+                        </div>
+                        <h3 class="fw-bold text-dark">Create Account</h3>
+                        <p class="text-secondary">Register as a Citizen</p>
                     </div>
 
                     <form method="post">
                         {% csrf_token %}
                         {% for field in form %}
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">{{ field.label }}</label>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">{{ field.label }}</label>
 
-                            {{ field }}
+                            <div class="input-group-custom">
+                                {{ field }}
+                            </div>
 
                             {% if field.help_text %}
-                            <div class="form-text text-muted">{{ field.help_text }}</div>
+                            <div class="form-text text-secondary mt-1"><small>{{ field.help_text }}</small></div>
                             {% endif %}
 
                             {% if field.errors %}
-                            <div class="text-danger small mt-1">
+                            <div class="text-danger small mt-2 fw-medium">
                                 {{ field.errors.as_text }}
                             </div>
                             {% endif %}
                         </div>
                         {% endfor %}
 
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        <div class="d-grid mb-4 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-medium">Create Account</button>
                         </div>
                     </form>
                     <div class="text-center">
-                        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                        <p class="text-secondary mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary text-decoration-none fw-semibold">Login here</a></p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Target Django form fields to apply Bootstrap classes since we don't have django-widget-tweaks setup in this file inline */
+    .input-group-custom input, .input-group-custom select, .input-group-custom textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #f8fafc;
+        background-clip: padding-box;
+        border: 1px solid transparent;
+        appearance: none;
+        border-radius: 0.5rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    .input-group-custom input:focus, .input-group-custom select:focus, .input-group-custom textarea:focus {
+        background-color: #fff;
+        border-color: #4F46E5;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+    }
+</style>
                 </div>
             </div>
         </div>

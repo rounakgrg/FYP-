@@ -8,10 +8,18 @@ class CitizenRegistrationForm(UserCreationForm):
         fields = ['username', 'email', 'first_name', 'last_name']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Email is required.')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('A user with that email already exists.')
+        return email
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,13 +41,21 @@ class AdminUserCreationForm(UserCreationForm):
         fields = ['username', 'email', 'first_name', 'last_name', 'role', 'department']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.Select(attrs={'class': 'form-select'}),
             'department': forms.Select(attrs={'class': 'form-select'}),
         }
     
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Email is required.')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('A user with that email already exists.')
+        return email
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:

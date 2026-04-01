@@ -1,52 +1,62 @@
-.\venv\Scripts\Activate{% extends 'core/base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-gradient py-5 mb-5 text-center text-lg-start">
-    <div class="container py-5">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6 slide-in-down">
-                <span
-                    class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 mb-3">
-                    <i class="bi bi-stars me-1"></i> Citizens First
+<section class="hero-gradient pt-5 pb-lg-5 mb-5 overflow-hidden position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%) !important; color: white !important;">
+    <div class="container pt-5 mt-5 pb-5">
+        <div class="row align-items-center g-5 pt-3">
+            <div class="col-lg-6 slide-in-down position-relative z-1 text-center text-lg-start">
+                <span class="badge bg-white bg-opacity-25 text-white border border-white border-opacity-25 rounded-pill px-3 py-2 mb-4 fs-6 backdrop-blur">
+                    <i class="bi bi-stars me-2 text-warning"></i> Citizens First Initiative
                 </span>
-                <h1 class="display-3 fw-bold mb-3 ls-tight">
-                    <span class="text-primary">Better Services for</span> <br>
-                    <span class="text-info">A Better City</span>
+                <h1 class="display-3 fw-bolder mb-3 tracking-tight lh-sm text-white">
+                    Better Services for <br>
+                    <span class="text-accent position-relative d-inline-block">
+                        A Better City
+                        <svg class="position-absolute w-100 h-auto start-0 bottom-0 translate-middle-y text-accent opacity-50" style="z-index: -1;" viewBox="0 0 200 20" preserveAspectRatio="none">
+                            <path d="M0,10 Q100,20 200,10" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"></path>
+                        </svg>
+                    </span>
                 </h1>
-                <p class="lead text-secondary text-opacity-75 mb-4" style="color: #94a3b8 !important;">
-                    Streamline your municipal requests. Report issues, track status, and access services—all in one
-                    secure portal.
+                <p class="lead text-white text-opacity-75 mb-5 fw-normal pe-lg-5" style="font-size: 1.25rem;">
+                    Streamline your municipal requests. Report issues, track status, and access services—all in one secure, modern portal designed for you.
                 </p>
-                <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
-                    <a href="{% url 'file_complaint' %}" class="btn btn-primary btn-lg px-4 shadow-lg">
-                        <i class="bi bi-megaphone me-2"></i> Report Issue
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{% url 'file_complaint' %}" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg fs-5 fw-semibold border-0 d-inline-flex align-items-center justify-content-center text-white">
+                        <i class="bi bi-megaphone-fill me-2 bg-white bg-opacity-25 p-2 rounded-circle"></i> Report Issue
                     </a>
-                    <a href="{% url 'service_charter' %}" class="btn btn-info text-white btn-lg px-4 shadow-lg">
+                    <a href="{% url 'service_charter' %}" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 shadow-sm fs-5 fw-semibold bg-white bg-opacity-10 backdrop-blur d-inline-flex align-items-center justify-content-center transition-colors">
                         View Services
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6 d-none d-lg-block">
+            <div class="col-lg-6 position-relative z-1 d-none d-lg-block">
                 <!-- Abstract Illustration Placeholder -->
-                <div class="row g-3">
+                <div class="row g-4 position-relative">
+                    <div class="position-absolute top-50 start-50 translate-middle w-100 h-100 bg-white bg-opacity-10 rounded-circle blur-3xl" style="filter: blur(80px); z-index: -1;"></div>
                     <div class="col-6 mt-5 pt-5">
-                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-3">
-                            <i class="bi bi-clipboard-check display-4 mb-2 text-success"></i>
-                            <h5>Real-time Tracking</h5>
-                            <small class="text-white-50">Stay updated on every step.</small>
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-4 rounded-4 hover-lift">
+                            <div class="bg-success bg-opacity-25 rounded-circle p-3 d-inline-flex mb-3 shadow-sm">
+                                <i class="bi bi-clipboard-check display-5 text-success"></i>
+                            </div>
+                            <h4 class="fw-bold">Real-time Tracking</h4>
+                            <p class="text-white-50 mb-0 small">Stay updated on every step.</p>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-3">
-                            <i class="bi bi-shield-check display-4 mb-2 text-info"></i>
-                            <h5>Digital Services</h5>
-                            <small class="text-white-50">Secure and accessible 24/7.</small>
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white mb-4 rounded-4 hover-lift">
+                            <div class="bg-info bg-opacity-25 rounded-circle p-3 d-inline-flex mb-3 shadow-sm">
+                                <i class="bi bi-shield-check display-5 text-info"></i>
+                            </div>
+                            <h4 class="fw-bold">Digital Services</h4>
+                            <p class="text-white-50 mb-0 small">Secure and accessible 24/7.</p>
                         </div>
-                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white">
-                            <i class="bi bi-people display-4 mb-2 text-warning"></i>
-                            <h5>Community First</h5>
-                            <small class="text-white-50">Building together.</small>
+                        <div class="card p-4 shadow-lg border-0 bg-white bg-opacity-10 backdrop-blur text-white rounded-4 hover-lift">
+                            <div class="bg-warning bg-opacity-25 rounded-circle p-3 d-inline-flex mb-3 shadow-sm">
+                                <i class="bi bi-people-fill display-5 text-warning"></i>
+                            </div>
+                            <h4 class="fw-bold">Community First</h4>
+                            <p class="text-white-50 mb-0 small">Building together.</p>
                         </div>
                     </div>
                 </div>
@@ -55,52 +65,70 @@
     </div>
 </section>
 
+<style>
+    .text-accent { color: var(--accent) !important; }
+    .tracking-tight { letter-spacing: -0.04em; }
+    .tracking-wide { letter-spacing: 0.05em; }
+    .backdrop-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .hover-lift:hover { transform: translateY(-8px); }
+    .transition-colors { transition: all 0.2s ease; }
+    .transition-colors:hover { background-color: rgba(255,255,255,0.2) !important; color: white !important; }
+</style>
+
 <!-- Features Grid -->
-<div class="container mb-5">
+<div class="container mb-5 pb-4">
     <div class="row g-4">
         <div class="col-md-4">
-            <a href="{% url 'service_charter' %}" class="text-decoration-none">
-                <div class="card h-100 p-4 border-start border-4 border-primary">
-                    <div class="card-body">
-                        <div
-                            class="d-inline-flex align-items-center justify-content-center p-3 bg-primary bg-opacity-10 rounded-circle mb-3 text-primary">
-                            <i class="bi bi-journal-text fs-4"></i>
+            <a href="{% url 'service_charter' %}" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 p-4 border-0 shadow-sm rounded-4 position-relative overflow-hidden group hover-lift">
+                    <div class="position-absolute top-0 start-0 w-100 h-1 bg-primary"></div>
+                    <div class="card-body p-2 mt-2">
+                        <div class="d-inline-flex align-items-center justify-content-center p-3 bg-primary bg-opacity-10 rounded-4 mb-4 text-primary shadow-sm" style="width: 64px; height: 64px;">
+                            <i class="bi bi-journal-text fs-3"></i>
                         </div>
-                        <h3>Service Charter</h3>
-                        <p class="text-muted">Browse our complete list of services, requirements, and estimated
-                            processing times.</p>
-                        <span class="text-primary fw-bold">Explore <i class="bi bi-arrow-right ms-1"></i></span>
+                        <h3 class="fw-bold mb-3 text-dark">Service Charter</h3>
+                        <p class="text-secondary mb-4 lh-lg">Browse our complete list of services, requirements, and estimated processing times.</p>
+                        <div class="d-flex align-items-center text-primary fw-semibold mt-auto">
+                            <span>Explore Services</span>
+                            <i class="bi bi-arrow-right ms-2 fs-5 transition-transform group-hover-translate-x"></i>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{% url 'file_complaint' %}" class="text-decoration-none">
-                <div class="card h-100 p-4 border-start border-4 border-success">
-                    <div class="card-body">
-                        <div
-                            class="d-inline-flex align-items-center justify-content-center p-3 bg-success bg-opacity-10 rounded-circle mb-3 text-success">
-                            <i class="bi bi-pencil-square fs-4"></i>
+            <a href="{% url 'file_complaint' %}" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 p-4 border-0 shadow-sm rounded-4 position-relative overflow-hidden group hover-lift">
+                    <div class="position-absolute top-0 start-0 w-100 h-1 bg-success"></div>
+                    <div class="card-body p-2 mt-2">
+                        <div class="d-inline-flex align-items-center justify-content-center p-3 bg-success bg-opacity-10 rounded-4 mb-4 text-success shadow-sm" style="width: 64px; height: 64px;">
+                            <i class="bi bi-pencil-square fs-3"></i>
                         </div>
-                        <h3>File Complaint</h3>
-                        <p class="text-muted">Encountered an issue? Submit a detailed report and let us handle the rest.
-                        </p>
-                        <span class="text-success fw-bold">Submit Now <i class="bi bi-arrow-right ms-1"></i></span>
+                        <h3 class="fw-bold mb-3 text-dark">File Complaint</h3>
+                        <p class="text-secondary mb-4 lh-lg">Encountered an issue? Submit a detailed report with location and images, and let us handle the rest.</p>
+                        <div class="d-flex align-items-center text-success fw-semibold mt-auto">
+                            <span>Submit Now</span>
+                            <i class="bi bi-arrow-right ms-2 fs-5 transition-transform group-hover-translate-x"></i>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{% url 'track_complaint' %}" class="text-decoration-none">
-                <div class="card h-100 p-4 border-start border-4 border-warning">
-                    <div class="card-body">
-                        <div
-                            class="d-inline-flex align-items-center justify-content-center p-3 bg-warning bg-opacity-10 rounded-circle mb-3 text-warning">
-                            <i class="bi bi-search fs-4"></i>
+            <a href="{% url 'track_complaint' %}" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 p-4 border-0 shadow-sm rounded-4 position-relative overflow-hidden group hover-lift">
+                    <div class="position-absolute top-0 start-0 w-100 h-1 bg-warning"></div>
+                    <div class="card-body p-2 mt-2">
+                        <div class="d-inline-flex align-items-center justify-content-center p-3 bg-warning bg-opacity-10 rounded-4 mb-4 text-warning shadow-sm" style="width: 64px; height: 64px;">
+                            <i class="bi bi-search fs-3"></i>
                         </div>
-                        <h3>Track Status</h3>
-                        <p class="text-muted">Enter your tracking ID to see the real-time progress of your request.</p>
-                        <span class="text-warning fw-bold">Check Status <i class="bi bi-arrow-right ms-1"></i></span>
+                        <h3 class="fw-bold mb-3 text-dark">Track Status</h3>
+                        <p class="text-secondary mb-4 lh-lg">Enter your tracking ID to securely see the real-time progress and updates of your existing request.</p>
+                        <div class="d-flex align-items-center text-warning fw-semibold mt-auto">
+                            <span>Check Status</span>
+                            <i class="bi bi-arrow-right ms-2 fs-5 transition-transform group-hover-translate-x"></i>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -108,21 +136,38 @@
     </div>
 </div>
 
+<style>
+    .h-1 { height: 4px !important; }
+    .group:hover .group-hover-translate-x { transform: translateX(6px); }
+    .transition-transform { transition: transform 0.2s ease; }
+</style>
+
 <!-- Stats Section -->
-<div class="container mb-5">
-    <div class="card border-0 bg-white shadow-sm overflow-hidden">
+<div class="container mb-5 pb-5 mt-4">
+    <div class="card border-0 bg-white shadow-lg overflow-hidden rounded-4">
         <div class="row text-center g-0">
-            <div class="col-md-4 p-5 border-end border-light">
-                <h2 class="display-4 fw-bold text-primary mb-0">2,450+</h2>
-                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">Complaints Resolved</p>
+            <div class="col-md-4 p-5 p-lg-5 position-relative">
+                <div class="position-absolute top-0 end-0 h-100 border-end border-light d-none d-md-block" style="width: 1px;"></div>
+                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex mb-3 p-3">
+                    <i class="bi bi-check-all fs-3 text-primary"></i>
+                </div>
+                <h2 class="display-5 fw-bolder text-dark mb-1">2,450+</h2>
+                <p class="text-secondary text-uppercase small fw-bold tracking-wide mt-2 mb-0">Complaints Resolved</p>
             </div>
-            <div class="col-md-4 p-5 border-end border-light">
-                <h2 class="display-4 fw-bold text-success mb-0">95%</h2>
-                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">User Satisfaction</p>
+            <div class="col-md-4 p-5 p-lg-5 position-relative">
+                <div class="position-absolute top-0 end-0 h-100 border-end border-light d-none d-md-block" style="width: 1px;"></div>
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex mb-3 p-3">
+                    <i class="bi bi-emoji-smile fs-3 text-success"></i>
+                </div>
+                <h2 class="display-5 fw-bolder text-dark mb-1">95%</h2>
+                <p class="text-secondary text-uppercase small fw-bold tracking-wide mt-2 mb-0">User Satisfaction</p>
             </div>
-            <div class="col-md-4 p-5">
-                <h2 class="display-4 fw-bold text-dark mb-0">24h</h2>
-                <p class="text-muted text-uppercase small fw-bold spacing-wide mt-2">Avg. Response Time</p>
+            <div class="col-md-4 p-5 p-lg-5">
+                <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex mb-3 p-3">
+                    <i class="bi bi-lightning-charge fs-3 text-info"></i>
+                </div>
+                <h2 class="display-5 fw-bolder text-dark mb-1">24h</h2>
+                <p class="text-secondary text-uppercase small fw-bold tracking-wide mt-2 mb-0">Avg. Response Time</p>
             </div>
         </div>
     </div>

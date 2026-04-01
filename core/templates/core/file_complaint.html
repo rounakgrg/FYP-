@@ -3,47 +3,57 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> File a Complaint</h4>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+                <div class="card-header bg-primary text-white border-bottom-0 py-4 px-4 px-md-5">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-25 rounded-circle d-inline-flex p-3 me-3">
+                            <i class="bi bi-pencil-square fs-3 text-white"></i>
+                        </div>
+                        <h3 class="mb-0 fw-bold tracking-tight">File a Complaint</h3>
+                    </div>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 p-md-5">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Complaint Title</label>
-                            <input type="text" name="title" class="form-control" required
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">Complaint Title</label>
+                            <input type="text" name="title" class="form-control form-control-lg bg-light border-0" required
                                 placeholder="e.g. Broken Streetlight on Main St">
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" id="id_location" name="location" class="form-control"
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">Location</label>
+                            <input type="text" id="id_location" name="location" class="form-control form-control-lg bg-light border-0 mb-2"
                                 placeholder="Select a location on the map or use the search icon..." readonly>
-                            <small class="text-muted d-block mb-2">Click on the map to pin a location, or use the search
-                                icon on the right side of the map.</small>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-info-circle text-secondary me-2"></i>
+                                <small class="text-secondary mb-0">Click on the map to pin a location, or use the search icon on the right side of the map.</small>
+                            </div>
                             <div class="position-relative">
-                                <div id="map" style="height: 350px; width: 100%; z-index: 1;" class="rounded border">
+                                <div id="map" style="height: 350px; width: 100%; z-index: 1;" class="rounded-4 border-0 shadow-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Attach Image (Optional)</label>
-                            <input type="file" id="id_image" name="image" class="form-control" accept="image/*">
-                            <div class="mt-3 d-none text-center" id="imagePreviewContainer">
-                                <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid rounded shadow"
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">Attach Image <span class="text-secondary fw-normal">(Optional)</span></label>
+                            <input type="file" id="id_image" name="image" class="form-control form-control-lg bg-light border-0" accept="image/*">
+                            <div class="mt-4 d-none text-center bg-light rounded-4 p-3 border border-1 border-light" id="imagePreviewContainer">
+                                <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid rounded-3 shadow-sm"
                                     style="max-height: 300px; object-fit: contain;">
-                                <button type="button" class="btn btn-sm btn-outline-danger mt-2"
-                                    onclick="document.getElementById('id_image').value=''; document.getElementById('imagePreviewContainer').classList.add('d-none');">Remove
-                                    Image</button>
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-4 fw-medium"
+                                        onclick="document.getElementById('id_image').value=''; document.getElementById('imagePreviewContainer').classList.add('d-none');">
+                                        <i class="bi bi-trash me-1"></i> Remove Image
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Department</label>
-                            <select name="department" class="form-select">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">Department</label>
+                            <select name="department" class="form-select form-select-lg bg-light border-0">
                                 <option value="">Select Department (Optional)</option>
                                 {% for dept in departments %}
                                 <option value="{{ dept.id }}">{{ dept.name }}</option>
@@ -51,14 +61,16 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea name="description" class="form-control" rows="5" required
+                        <div class="mb-5">
+                            <label class="form-label fw-semibold text-dark">Description</label>
+                            <textarea name="description" class="form-control form-control-lg bg-light border-0" rows="5" required
                                 placeholder="Detailed description of the issue..."></textarea>
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Complaint</button>
+                        <div class="d-grid mt-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-medium py-3 fs-5">
+                                <i class="bi bi-send-fill me-2"></i> Submit Complaint
+                            </button>
                         </div>
                     </form>
                 </div>

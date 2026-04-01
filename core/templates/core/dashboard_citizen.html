@@ -3,27 +3,37 @@
 {% block content %}
 <div class="container py-5">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="h2 mb-1">Welcome, {{ user.username|title }}!</h1>
-            <p class="text-muted">Manage your requests and track their progress.</p>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
+        <div class="d-flex align-items-center">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 me-3 d-none d-sm-flex">
+                <i class="bi bi-person-fill fs-3 text-primary"></i>
+            </div>
+            <div>
+                <h1 class="h2 mb-1 fw-bold tracking-tight text-dark">Welcome, {{ user.username|title }}!</h1>
+                <p class="text-secondary mb-0">Manage your requests and track their progress.</p>
+            </div>
         </div>
-        <a href="{% url 'file_complaint' %}" class="btn btn-primary shadow-sm hover-scale">
-            <i class="bi bi-plus-lg me-2"></i> New Complaint
-        </a>
+        <div>
+            <a href="{% url 'file_complaint' %}" class="btn btn-primary btn-lg rounded-pill shadow-sm px-4 fw-medium hover-lift d-inline-flex align-items-center">
+                <i class="bi bi-plus-lg me-2 bg-white bg-opacity-25 rounded-circle p-1"></i> New Complaint
+            </a>
+        </div>
     </div>
 
     <!-- Quick Stats -->
     <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card border-0 bg-primary bg-opacity-10 h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="p-3 bg-white rounded-circle text-primary shadow-sm me-3">
-                        <i class="bi bi-files fs-4"></i>
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary bg-opacity-10 overflow-hidden position-relative hover-lift">
+                <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                    <i class="bi bi-files display-1 text-primary"></i>
+                </div>
+                <div class="card-body p-4 d-flex align-items-center position-relative z-1">
+                    <div class="p-3 bg-white rounded-circle shadow-sm me-4 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="bi bi-files fs-3 text-primary"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0 text-muted text-uppercase small fw-bold">Total Requests</h6>
-                        <h2 class="mb-0 fw-bold">{{ complaints|length }}</h2>
+                        <h6 class="mb-1 text-secondary text-uppercase fw-bold tracking-wide" style="font-size: 0.8rem;">Total Requests</h6>
+                        <h2 class="mb-0 fw-bolder text-dark display-6">{{ complaints|length }}</h2>
                     </div>
                 </div>
             </div>
@@ -32,43 +42,53 @@
     </div>
 
     <!-- Usage Table -->
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Recent Complaints</h5>
-            <div class="input-group w-auto">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0" placeholder="Search...">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+        <div class="card-header bg-white border-bottom border-light py-4 px-4 px-md-5 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-clock-history fs-4 me-2 text-primary"></i>
+                <h5 class="mb-0 fw-bold text-dark">Recent Complaints</h5>
+            </div>
+            <div class="input-group input-group-sm w-auto shadow-sm rounded-pill overflow-hidden border border-light">
+                <span class="input-group-text bg-light border-0 px-3"><i class="bi bi-search text-secondary"></i></span>
+                <input type="text" class="form-control border-0 bg-light py-2 px-2" placeholder="Search records...">
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table align-middle mb-0 text-nowrap">
-                <thead class="bg-light">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+                <thead class="bg-light bg-opacity-50">
                     <tr>
-                        <th class="ps-4">Tracking ID</th>
-                        <th>Title</th>
-                        <th>Date Submitted</th>
-                        <th>Current Status</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <th class="ps-4 ps-md-5 py-3 text-uppercase text-secondary fw-bold" style="font-size: 0.75rem;">Tracking ID</th>
+                        <th class="py-3 text-uppercase text-secondary fw-bold" style="font-size: 0.75rem;">Title</th>
+                        <th class="py-3 text-uppercase text-secondary fw-bold" style="font-size: 0.75rem;">Date Submitted</th>
+                        <th class="py-3 text-uppercase text-secondary fw-bold" style="font-size: 0.75rem;">Current Status</th>
+                        <th class="text-end pe-4 pe-md-5 py-3 text-uppercase text-secondary fw-bold" style="font-size: 0.75rem;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="border-top-0">
                     {% for complaint in complaints %}
-                    <tr class="hover-bg-light">
-                        <td class="ps-4">
-                            <span class="font-monospace fw-bold text-dark">#{{ complaint.tracking_id }}</span>
+                    <tr>
+                        <td class="ps-4 ps-md-5 py-3">
+                            <span class="badge bg-light text-dark font-monospace fw-bold border border-secondary border-opacity-25 px-2 py-1">#{{ complaint.tracking_id }}</span>
                         </td>
-                        <td>
-                            <div class="fw-medium text-dark">{{ complaint.title }}</div>
-                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">{{ complaint.description }}</small>
+                        <td class="py-3">
+                            <div class="fw-bold text-dark text-truncate" style="max-width: 250px;">{{ complaint.title }}</div>
+                            <small class="text-secondary d-block text-truncate mt-1" style="max-width: 250px;">{{ complaint.description }}</small>
                         </td>
-                        <td>{{ complaint.created_at|date:"M d, Y" }}</td>
-                        <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.status|title }}</span></td>
-                        <td class="text-end pe-4">
+                        <td class="py-3 text-secondary fw-medium small">{{ complaint.created_at|date:"M d, Y" }}</td>
+                        <td class="py-3">
+                            <span class="badge rounded-pill fw-medium px-3 py-1 shadow-sm 
+                                {% if complaint.status == 'resolved' %}bg-success bg-opacity-10 text-success border border-success border-opacity-25
+                                {% elif complaint.status == 'in_progress' %}bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25
+                                {% else %}bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25{% endif %}">
+                                {{ complaint.status|title }}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4 pe-md-5 py-3">
                             <form action="{% url 'track_complaint' %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <input type="hidden" name="tracking_id" value="{{ complaint.tracking_id }}">
-                                <button type="submit" class="btn btn-sm btn-white border shadow-sm text-primary">
-                                    Track <i class="bi bi-chevron-right ms-1"></i>
+                                <button type="submit" class="btn btn-sm btn-light rounded-pill px-3 fw-medium text-primary hover-lift">
+                                    Track <i class="bi bi-arrow-right-short ms-1 fs-6"></i>
                                 </button>
                             </form>
                         </td>

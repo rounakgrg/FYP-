@@ -3,14 +3,17 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h2 class="mb-4">Track Your Complaint</h2>
-            <form method="post" class="card p-4 shadow-sm mb-5">
+        <div class="col-md-8 col-lg-6 text-center">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                <i class="bi bi-search fs-2 text-primary"></i>
+            </div>
+            <h2 class="fw-bolder text-dark mb-4 tracking-tight">Track Your Complaint</h2>
+            <form method="post" class="card border-0 p-4 p-md-5 shadow-sm rounded-4 mb-5">
                 {% csrf_token %}
-                <div class="input-group mb-3">
-                    <input type="text" name="tracking_id" class="form-control form-control-lg"
-                        placeholder="Enter Tracking ID (e.g. A1B2C3D4)" required>
-                    <button class="btn btn-primary" type="submit">Track</button>
+                <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border border-light">
+                    <input type="text" name="tracking_id" class="form-control border-0 bg-light px-4"
+                        placeholder="Tracking ID (e.g. A1B2C3D4)" required>
+                    <button class="btn btn-primary px-4 fw-medium" type="submit">Track Status</button>
                 </div>
             </form>
         </div>
@@ -18,48 +21,60 @@
 
     {% if complaint %}
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm border-primary mb-4">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Complaint #{{ complaint.tracking_id }}</h5>
-                    <span class="badge bg-light text-primary rounded-pill fs-6">{{ complaint.status|title }}</span>
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+                <div class="card-header bg-primary text-white border-bottom-0 py-4 px-4 px-md-5 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-text fs-4 me-3 text-white-50"></i>
+                        <h4 class="mb-0 fw-bold tracking-tight">Complaint #{{ complaint.tracking_id }}</h4>
+                    </div>
+                    <span class="badge bg-white text-primary rounded-pill px-3 py-2 fs-6 shadow-sm">{{ complaint.get_status_display }}</span>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 p-md-5">
                     <div class="row">
                         <!-- Left Column: Details -->
                         <div class="col-md-6 border-end pe-4">
-                            <h3 class="card-title text-primary mb-2">{{ complaint.title }}</h3>
-                            <p class="text-muted small mb-4">
-                                <i class="bi bi-calendar"></i> Submitted on {{ complaint.created_at|date:"M d, Y" }}
+                            <h3 class="card-title fw-bold text-dark mb-3">{{ complaint.title }}</h3>
+                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                <div class="bg-light rounded-pill px-3 py-2 text-secondary small fw-medium">
+                                    <i class="bi bi-calendar-check text-primary me-1"></i> {{ complaint.created_at|date:"M d, Y" }}
+                                </div>
                                 {% if complaint.department %}
-                                <br><i class="bi bi-building"></i> Department: {{ complaint.department.name }}
+                                <div class="bg-light rounded-pill px-3 py-2 text-secondary small fw-medium">
+                                    <i class="bi bi-building text-primary me-1"></i> {{ complaint.department.name }}
+                                </div>
                                 {% endif %}
-                            </p>
+                            </div>
 
-                            <h5 class="fw-bold border-bottom pb-2">Description</h5>
-                            <p class="text-secondary">{{ complaint.description }}</p>
+                            <h6 class="text-uppercase fw-bold text-secondary tracking-wide border-bottom border-light pb-2 mb-3" style="font-size: 0.85rem;">Description</h6>
+                            <p class="text-dark lh-lg mb-5">{{ complaint.description }}</p>
 
                             {% if complaint.remarks.exists %}
-                            <div class="mt-4">
-                                <h5 class="fw-bold border-bottom pb-2">Updates & Remarks</h5>
-                                <div class="list-group list-group-flush mt-2">
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-secondary tracking-wide border-bottom border-light pb-2 mb-3" style="font-size: 0.85rem;">Updates & Remarks</h6>
+                                <div class="list-group list-group-flush border-0">
                                     {% for remark in complaint.remarks.all %}
-                                    <div class="list-group-item px-0 py-3">
-                                        <div class="d-flex w-100 justify-content-between mb-1">
-                                            <h6 class="mb-0 fw-bold">{{ remark.user.username }} <span
-                                                    class="badge bg-secondary ms-1">{{ remark.user.get_role_display
-                                                    }}</span></h6>
-                                            <small class="text-muted">{{ remark.created_at|timesince }} ago</small>
+                                    <div class="list-group-item px-0 py-3 border-light bg-transparent">
+                                        <div class="d-flex w-100 justify-content-between align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-dark">{{ remark.user.username }} 
+                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill ms-2 fw-normal">{{ remark.user.get_role_display }}</span>
+                                                </h6>
+                                            </div>
+                                            <small class="text-muted fw-medium">{{ remark.created_at|timesince }} ago</small>
                                         </div>
-                                        <p class="mb-0 text-dark small">{{ remark.remark }}</p>
+                                        <p class="mb-0 text-secondary ps-5">{{ remark.remark }}</p>
                                     </div>
                                     {% endfor %}
                                 </div>
                             </div>
                             {% else %}
-                            <div class="mt-4">
-                                <h5 class="fw-bold border-bottom pb-2">Updates & Remarks</h5>
-                                <p class="text-muted small mt-2">No updates yet.</p>
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-secondary tracking-wide border-bottom border-light pb-2 mb-3" style="font-size: 0.85rem;">Updates & Remarks</h6>
+                                <p class="text-muted small mt-2 bg-light rounded-3 p-3 text-center border border-light">No updates yet.</p>
                             </div>
                             {% endif %}
                         </div>
@@ -67,20 +82,23 @@
                         <!-- Right Column: Media (Image & Map) -->
                         <div class="col-md-6 ps-4">
                             {% if complaint.location %}
-                            <h5 class="fw-bold border-bottom pb-2 mb-3">Location</h5>
-                            <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> <span
-                                    id="location-text">{{ complaint.location }}</span></p>
-                            <div class="mb-4">
+                            <div class="mb-5">
+                                <h6 class="text-uppercase fw-bold text-secondary tracking-wide border-bottom border-light pb-2 mb-3" style="font-size: 0.85rem;">Location</h6>
+                                <p class="text-dark bg-light rounded-pill px-3 py-2 d-inline-block fw-medium mb-3">
+                                    <i class="bi bi-geo-alt-fill text-danger me-2"></i> <span id="location-text">{{ complaint.location }}</span>
+                                </p>
                                 <div id="map" style="height: 250px; width: 100%; z-index: 1;"
-                                    class="rounded border shadow-sm"></div>
+                                    class="rounded-4 border-0 shadow-sm"></div>
                             </div>
                             {% endif %}
 
                             {% if complaint.image %}
-                            <h5 class="fw-bold border-bottom pb-2 mb-3">Attached Image</h5>
-                            <div class="text-center">
-                                <img src="{{ complaint.image.url }}" alt="Complaint Image"
-                                    class="img-fluid rounded shadow" style="max-height: 350px; object-fit: contain;">
+                            <div>
+                                <h6 class="text-uppercase fw-bold text-secondary tracking-wide border-bottom border-light pb-2 mb-3" style="font-size: 0.85rem;">Attached Image</h6>
+                                <div class="bg-light rounded-4 p-2 text-center border border-light">
+                                    <img src="{{ complaint.image.url }}" alt="Complaint Image"
+                                        class="img-fluid rounded-3 shadow-sm" style="max-height: 350px; object-fit: contain;">
+                                </div>
                             </div>
                             {% endif %}
                         </div>
