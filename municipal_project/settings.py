@@ -101,7 +101,12 @@ else:
 
 
 # Email Configuration for Production/Development
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+if not os.environ.get("EMAIL_HOST_PASSWORD") or os.environ.get("EMAIL_HOST_PASSWORD") == "your-app-password":
+    # Output emails to console for local development to avoid SMTP errors without setup
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

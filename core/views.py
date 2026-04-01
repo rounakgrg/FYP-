@@ -10,22 +10,7 @@ def register(request):
         form = CitizenRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful!")
-            return redirect('dashboard')
-    else:
-        form = CitizenRegistrationForm()
-    return render(request, 'core/register.html', {'form': form})
-
-from .forms import CitizenRegistrationForm
-from django.contrib.auth import login
-
-def register(request):
-    if request.method == 'POST':
-        form = CitizenRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, "Registration successful!")
             return redirect('dashboard')
     else:
