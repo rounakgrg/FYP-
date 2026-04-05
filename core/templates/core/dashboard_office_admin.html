@@ -1,6 +1,37 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .complaint-row {
+        transition: all 0.2s ease, background-color 0.2s ease;
+        cursor: pointer;
+    }
+    .complaint-row:hover {
+        background-color: #f8f9fa !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-radius: 8px;
+    }
+    .action-btn-container {
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    .complaint-row:hover .action-btn-container {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    .search-focus-effect:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+        border-color: #86b7fe;
+    }
+</style>
 {% if is_super_admin %}
 <div class="theme-super-admin">
     {% endif %}
@@ -21,7 +52,9 @@
             <a href="{% url 'dashboard_super_admin' %}" class="btn btn-outline-danger">Back to Dashboard</a>
             {% else %}
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary"><i class="bi bi-download me-2"></i> Export Report</button>
+                <a href="{% url 'export_complaints' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-download me-2"></i> Export Report
+                </a>
             </div>
             {% endif %}
         </div>
@@ -101,9 +134,9 @@
         <!-- Complaints Table Header with Search -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0 text-secondary fw-bold">Recent Complaints</h4>
-            <div class="input-group" style="max-width: 300px;">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" id="tableSearch" class="form-control border-start-0 ps-0"
+            <div class="input-group" style="max-width: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 20px; overflow: hidden;">
+                <span class="input-group-text bg-white border-end-0 border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="tableSearch" class="form-control border-start-0 border-0 search-focus-effect ps-0"
                     placeholder="Search by ID, title, or status...">
             </div>
         </div>
@@ -127,22 +160,29 @@
                     <tbody id="complaintsTableBody">
                         {% for complaint in complaints %}
                         <tr class="complaint-row">
-                            <td class="ps-4"><span class="font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
+                            <td class="ps-4"><span class="badge bg-light text-dark border font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
                             </td>
                             <td>
                                 <div class="fw-medium">{{ complaint.title }}</div>
                             </td>
-                            <td>{{ complaint.location|default:"-" }}</td>
-                            <td>{{ complaint.citizen.username }}</td>
-                            <td>{{ complaint.department.name }}</td>
-                            <td>{{ complaint.get_status_display }}</td>
-                            <td>{{ complaint.created_at|date:"M d, Y" }}</td>
-                            <td class="text-end pe-4">
+                            <td class="text-secondary">{{ complaint.location|default:"-" }}</td>
+                            <td><span class="fw-semibold text-dark">{{ complaint.citizen.username }}</span></td>
+                            <td class="text-secondary">{{ complaint.department.name }}</td>
+                            <td><span class="status-badge status-{{ complaint.status }} shadow-sm">{{ complaint.get_status_display }}</span></td>
+                            <td class="text-secondary">{{ complaint.created_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4 action-btn-container">
                                 <a href="{% url 'admin_complaint_detail' complaint.pk %}"
-                                    class="btn btn-sm btn-light text-primary"><i class="bi bi-eye me-1"></i> View</a>
+                                    class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm"><i class="bi bi-eye me-1"></i> View</a>
                             </td>
                         </tr>
                         {% endfor %}
+                        <tr id="noResultsRow" style="display: none;">
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-search fs-1 text-light-gray opacity-50 mb-3 d-block"></i>
+                                <h5>No matching complaints found</h5>
+                                <p class="small">Try adjusting your search criteria.</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -163,14 +203,27 @@
         const statCards = document.querySelectorAll('.stat-card');
 
         function filterTable(searchTerm) {
+            let visibleCount = 0;
+            const noResultsRow = document.getElementById('noResultsRow');
+            
             tableRows.forEach(row => {
+                if (row.id === 'noResultsRow') return;
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
             });
+            
+            if (noResultsRow) {
+                noResultsRow.style.display = visibleCount === 0 ? '' : 'none';
+            }
         }
 
         if (searchInput) {
-            searchInput.addEventListener('keyup', function () {
+            searchInput.addEventListener('input', function () {
                 filterTable(this.value.toLowerCase());
             });
         }

@@ -18,6 +18,7 @@ urlpatterns = [
     path('dashboard/admin/services/add/', views.admin_service_add, name='admin_service_add'),
     path('dashboard/admin/services/edit/<int:pk>/', views.admin_service_edit, name='admin_service_edit'),
     path('dashboard/admin/services/delete/<int:pk>/', views.admin_service_delete, name='admin_service_delete'),
+    path('dashboard/export_complaints/', views.export_complaints, name='export_complaints'),
     
     # Authentication
     path('register/', views.register, name='register'),

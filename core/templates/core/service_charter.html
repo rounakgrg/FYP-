@@ -1,6 +1,16 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<style>
+    .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+
 <div class="container py-5 mt-4">
     <div class="d-flex align-items-center mb-4">
         <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 me-3">
@@ -13,21 +23,21 @@
         <div class="col-md-8 col-lg-6">
             <div class="position-relative">
                 <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
-                <input type="text" class="form-control form-control-lg bg-white border-0 shadow-sm rounded-pill ps-5" placeholder="Search services...">
+                <input type="text" id="serviceSearch" class="form-control form-control-lg bg-white border-0 shadow-sm rounded-pill ps-5" placeholder="Search services by title or description...">
             </div>
         </div>
     </div>
 
-    <div class="row g-4">
+    <div class="row g-4" id="servicesContainer">
     {% for service in services %}
-        <div class="col-md-6 col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4 h-100 hover-lift">
+        <div class="col-md-6 col-lg-6 service-container">
+            <div class="card border-0 shadow-sm rounded-4 h-100 hover-lift service-card">
                 <div class="card-body p-4 d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h4 class="card-title fw-bold text-dark mb-0">{{ service.title }}</h4>
-                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-2 fw-medium ms-2 text-nowrap">{{ service.processing_time }}</span>
+                    <div class="d-flex justify-content-between align-items-start mb-3 gap-2">
+                        <h4 class="card-title fw-bold text-dark mb-0 service-title">{{ service.title }}</h4>
+                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-2 fw-medium text-nowrap">{{ service.processing_time }}</span>
                     </div>
-                    <p class="card-text text-secondary mb-4">{{ service.description }}</p>
+                    <p class="card-text text-secondary mb-4 service-desc">{{ service.description }}</p>
                     
                     <div class="mt-auto pt-3 border-top border-light">
                         <div class="row g-3">
@@ -45,13 +55,56 @@
             </div>
         </div>
     {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info border-0 shadow-sm rounded-4 p-4 row align-items-center bg-white d-flex">
-                <i class="bi bi-info-circle-fill text-info fs-3 me-3 col-auto"></i>
-                <div class="col">No services found in the charter.</div>
+        <div class="col-12" id="dbEmptyState">
+            <div class="alert alert-info border-0 shadow-sm rounded-4 p-4 d-flex align-items-center bg-white">
+                <i class="bi bi-info-circle-fill text-info fs-3 me-3"></i>
+                <div>No services found in the charter.</div>
             </div>
         </div>
     {% endfor %}
+        
+        <!-- JavaScript Search Empty State -->
+        <div class="col-12 text-center py-5" id="jsEmptyState" style="display: none;">
+            <i class="bi bi-search fs-1 text-secondary opacity-50 mb-3 d-block"></i>
+            <h5 class="text-dark">No matching services found</h5>
+            <p class="text-muted small">Try adjusting your search keywords.</p>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('serviceSearch');
+    const serviceContainers = document.querySelectorAll('.service-container');
+    const jsEmptyState = document.getElementById('jsEmptyState');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            let visibleCount = 0;
+            
+            serviceContainers.forEach(container => {
+                const title = container.querySelector('.service-title').textContent.toLowerCase();
+                const desc = container.querySelector('.service-desc').textContent.toLowerCase();
+                
+                if (title.includes(query) || desc.includes(query)) {
+                    container.style.display = '';
+                    visibleCount++;
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // Toggle empty state if no JS results
+            if (jsEmptyState) {
+                if (visibleCount === 0 && serviceContainers.length > 0) {
+                    jsEmptyState.style.display = 'block';
+                } else {
+                    jsEmptyState.style.display = 'none';
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

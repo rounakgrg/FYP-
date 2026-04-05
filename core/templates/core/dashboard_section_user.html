@@ -1,40 +1,208 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="mb-4">My Assignments</h2>
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .filter-btn {
+        border-radius: 20px;
+        padding: 0.4rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .filter-btn.active {
+        background-color: var(--bs-primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
+    .search-box {
+        position: relative;
+        max-width: 300px;
+        width: 100%;
+    }
+    .search-box i {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    .search-box input {
+        padding-left: 2.5rem;
+        border-radius: 30px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+    .search-box input:focus {
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
+        border-color: #86b7fe;
+    }
+    .assignment-row {
+        transition: all 0.2s ease, background-color 0.2s ease;
+        cursor: pointer;
+    }
+    .assignment-row:hover {
+        background-color: #f8f9fa !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        position: relative;
+        z-index: 10;
+        border-radius: 8px;
+    }
+    .action-btn {
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    .assignment-row:hover .action-btn {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    /* Hidden class for filtering */
+    .d-none-filter {
+        display: none !important;
+    }
+</style>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Department</th>
-                    <th>Status</th>
-                    <th>Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for complaint in complaints %}
-                <tr>
-                    <td><code>{{ complaint.tracking_id }}</code></td>
-                    <td>{{ complaint.title }}</td>
-                    <td>{{ complaint.department.name }}</td>
-                    <td><span class="status-badge status-{{ complaint.status }}">{{ complaint.status|title }}</span>
-                    </td>
-                    <td>
-                        <a href="{% url 'admin_complaint_detail' complaint.pk %}"
-                            class="btn btn-sm btn-outline-primary">Update Status</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">No assignments yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container py-5">
+    <div class="dashboard-header">
+        <h2 class="mb-0 fw-bold">My Assignments</h2>
+        
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="assignmentSearch" class="form-control" placeholder="Search by ID or Title...">
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="d-flex gap-2 mb-4 overflow-auto pb-2" id="statusFilters">
+        <button class="btn btn-outline-secondary filter-btn active" data-filter="all">All</button>
+        <button class="btn btn-outline-warning filter-btn" data-filter="pending">Pending</button>
+        <button class="btn btn-outline-info filter-btn" data-filter="in_progress">In Progress</button>
+        <button class="btn btn-outline-success filter-btn" data-filter="resolved">Resolved</button>
+    </div>
+
+    <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0" id="assignmentsTable">
+                <thead class="table-light border-bottom">
+                    <tr>
+                        <th class="py-3 px-4 text-muted fw-semibold">ID</th>
+                        <th class="py-3 px-4 text-muted fw-semibold">Title</th>
+                        <th class="py-3 px-4 text-muted fw-semibold">Department</th>
+                        <th class="py-3 px-4 text-muted fw-semibold">Status</th>
+                        <th class="py-3 px-4 text-muted fw-semibold text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr class="assignment-row border-bottom" data-status="{{ complaint.status|lower }}">
+                        <td class="px-4 py-3">
+                            <span class="badge bg-light text-dark border tracking-id">{{ complaint.tracking_id }}</span>
+                        </td>
+                        <td class="px-4 py-3 fw-medium title-cell">{{ complaint.title }}</td>
+                        <td class="px-4 py-3 text-secondary">{{ complaint.department.name }}</td>
+                        <td class="px-4 py-3">
+                            <span class="status-badge status-{{ complaint.status }} shadow-sm">{{ complaint.status|title }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-end">
+                            <a href="{% url 'admin_complaint_detail' complaint.pk %}"
+                                class="btn btn-sm btn-primary action-btn rounded-pill px-3 shadow-sm">
+                                Update
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="emptyRow">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-inbox fa-3x mb-3 text-light-gray opacity-50"></i>
+                                <h5>No assignments found</h5>
+                                <p class="text-secondary small">You currently have no tasks assigned.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- JavaScript Empty State -->
+                    <tr id="noResultsRow" class="d-none">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-search fa-3x mb-3 text-light-gray opacity-50"></i>
+                                <h5>No matching assignments</h5>
+                                <p class="text-secondary small">Try adjusting your search or filters.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('assignmentSearch');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const rows = document.querySelectorAll('.assignment-row');
+    const noResultsRow = document.getElementById('noResultsRow');
+    const emptyRow = document.getElementById('emptyRow');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function filterTable() {
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const status = row.getAttribute('data-status');
+            const title = row.querySelector('.title-cell').textContent.toLowerCase();
+            const id = row.querySelector('.tracking-id').textContent.toLowerCase();
+            
+            const matchesFilter = currentFilter === 'all' || status === currentFilter.replace('_', ' '); // Handle simple match
+            const matchesFilterData = currentFilter === 'all' || status === currentFilter || status.replace(' ', '_') === currentFilter;
+
+            const matchesSearch = title.includes(searchQuery) || id.includes(searchQuery);
+
+            if (matchesFilterData && matchesSearch) {
+                row.classList.remove('d-none-filter');
+                visibleCount++;
+            } else {
+                row.classList.add('d-none-filter');
+            }
+        });
+
+        // Toggle no results row
+        if (visibleCount === 0 && rows.length > 0) {
+            noResultsRow.classList.remove('d-none');
+        } else {
+            noResultsRow.classList.add('d-none');
+        }
+    }
+
+    // Search functionality
+    searchInput.addEventListener('input', function(e) {
+        searchQuery = e.target.value.toLowerCase();
+        filterTable();
+    });
+
+    // Filter functionality
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Apply filter
+            currentFilter = this.getAttribute('data-filter');
+            filterTable();
+        });
+    });
+});
+</script>
 {% endblock %}

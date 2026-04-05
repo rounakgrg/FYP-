@@ -1,48 +1,182 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="mb-4">Public Relations Dashboard</h2>
+<style>
+    .pr-stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .pr-stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .complaint-row {
+        transition: all 0.2s ease, background-color 0.2s ease;
+        cursor: pointer;
+    }
+    .complaint-row:hover {
+        background-color: #f8f9fa !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-radius: 8px;
+    }
+    .action-btn-container {
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    .complaint-row:hover .action-btn-container {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    .search-focus-effect:focus {
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25) !important;
+        border-color: #72c092;
+    }
+    .progress-bar-animated {
+        animation: progressbar-slide 1.5s ease-out forwards;
+        width: 0;
+    }
+    @keyframes progressbar-slide {
+        to { width: 75%; } /* Placeholder mock percentage */
+    }
+</style>
 
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h2 class="mb-1 fw-bold">Public Relations Dashboard</h2>
+            <p class="text-muted mb-0">Overview of resolved citizen complaints and public matters.</p>
+        </div>
+        <div>
+            <button class="btn btn-outline-success rounded-pill px-4" onclick="window.print()"><i class="bi bi-printer me-2"></i> Print Report</button>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
     <div class="row g-4 mb-5">
         <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">Summary Report</div>
-                <div class="card-body">
-                    <p>Total Complaints: <strong>{{ complaints|length }}</strong></p>
-                    <p>Resolution Rate: <strong>Coming soon...</strong></p> <!-- Placeholder for calculation logic -->
+            <div class="card h-100 pr-stat-card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase small fw-bold mb-2 opacity-75">Total Public Matters</h6>
+                        <h2 class="mb-0 fw-bold display-5">{{ complaints|length }}</h2>
+                    </div>
+                    <div class="bg-white bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                        <i class="bi bi-megaphone fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 pr-stat-card border-0 shadow-sm bg-success text-white">
+                <div class="card-body p-4 d-flex flex-column justify-content-center">
+                    <div class="d-flex justify-content-between align-items-end mb-2">
+                        <div>
+                            <h6 class="text-uppercase small fw-bold mb-1 opacity-75">Estimated Resolution Rate</h6>
+                            <h3 class="mb-0 fw-bold">75% <span class="fs-6 fw-normal opacity-75">(Projected)</span></h3>
+                        </div>
+                        <i class="bi bi-graph-up-arrow fs-2 opacity-75"></i>
+                    </div>
+                    <div class="progress mt-2 bg-white bg-opacity-25" style="height: 8px;">
+                        <div class="progress-bar bg-white progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Resolved Complaints Log</h5>
+    <!-- Interactive Table Section -->
+    <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h5 class="mb-0 text-success fw-bold"><i class="bi bi-check2-circle me-2"></i>Resolved Complaints Log</h5>
+            
+            <div class="input-group" style="max-width: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 20px; overflow: hidden;">
+                <span class="input-group-text bg-light border-end-0 border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="prTableSearch" class="form-control bg-light border-start-0 border-0 search-focus-effect ps-0" placeholder="Search logs...">
+            </div>
         </div>
+        
         <div class="table-responsive">
-            <table class="table table-striped mb-0">
-                <thead>
+            <table class="table align-middle table-borderless mb-0 text-nowrap" id="prTable">
+                <thead class="bg-light border-bottom">
                     <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Date Resolved</th>
-                        <th>Details</th>
+                        <th class="ps-4 py-3 text-muted">Tracking ID</th>
+                        <th class="py-3 text-muted">Title</th>
+                        <th class="py-3 text-muted">Date Resolved</th>
+                        <th class="text-end pe-4 py-3 text-muted">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for complaint in complaints %}
-                    <tr>
-                        <td>{{ complaint.tracking_id }}</td>
-                        <td>{{ complaint.title }}</td>
-                        <td>{{ complaint.updated_at|date:"M d, Y" }}</td>
-                        <td><a href="{% url 'admin_complaint_detail' complaint.pk %}"
-                                class="btn btn-sm btn-light">View</a></td>
+                    <tr class="complaint-row border-bottom">
+                        <td class="ps-4">
+                            <span class="badge bg-light text-dark border font-monospace fw-bold">#{{ complaint.tracking_id }}</span>
+                        </td>
+                        <td><div class="fw-medium text-dark">{{ complaint.title }}</div></td>
+                        <td class="text-secondary"><i class="bi bi-calendar-event me-2 opacity-50"></i>{{ complaint.updated_at|date:"M d, Y" }}</td>
+                        <td class="text-end pe-4 action-btn-container">
+                            <a href="{% url 'admin_complaint_detail' complaint.pk %}" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="emptyStateRow">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 text-light-gray opacity-50 mb-3 d-block"></i>
+                            <h5>No resolved complaints yet</h5>
+                            <p class="small">Data will populate here once complaints are marked as resolved.</p>
+                        </td>
                     </tr>
                     {% endfor %}
+                    
+                    <tr id="noPRResultsRow" style="display: none;">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-search fs-1 text-light-gray opacity-50 mb-3 d-block"></i>
+                            <h5>No matching logs found</h5>
+                            <p class="small">Try adjusting your search criteria.</p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('prTableSearch');
+    const tableRows = document.querySelectorAll('.complaint-row');
+    const noResultsRow = document.getElementById('noPRResultsRow');
+
+    function filterTable(searchTerm) {
+        let visibleCount = 0;
+        
+        tableRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        if (noResultsRow) {
+            if (visibleCount === 0 && tableRows.length > 0) {
+                noResultsRow.style.display = '';
+            } else {
+                noResultsRow.style.display = 'none';
+            }
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            filterTable(this.value.toLowerCase());
+        });
+    }
+});
+</script>
 {% endblock %}
