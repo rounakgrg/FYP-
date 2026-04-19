@@ -60,17 +60,29 @@ h6 {
 }
 
 .nav-link {
-    font-weight: 500;
-    color: var(--secondary) !important;
-    padding: 0.5rem 1rem !important;
-    transition: all 0.2s ease;
-    border-radius: 0.5rem;
+    font-weight: 600;
+    color: var(--dark) !important;
+    padding: 0.5rem 1.25rem !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 2rem; /* Matches pill shape better */
+    position: relative;
+    overflow: hidden;
 }
 
 .nav-link:hover,
 .nav-link.active {
     color: var(--primary) !important;
     background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1);
+}
+
+.navbar-brand {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.navbar-brand:hover {
+    transform: scale(1.03);
 }
 
 /* Cards */
