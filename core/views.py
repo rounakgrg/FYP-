@@ -4,7 +4,7 @@ import csv
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import ServiceCharter, Complaint, ComplaintRemark, Department, User
-from .forms import CitizenRegistrationForm, AdminUserCreationForm, ServiceCharterForm
+from .forms import CitizenRegistrationForm, AdminUserCreationForm, AdminUserEditForm, ServiceCharterForm
 from django.contrib.auth import login
 
 def register(request):
@@ -421,6 +421,41 @@ def admin_user_add(request):
     else:
         form = AdminUserCreationForm()
     return render(request, 'core/admin_user_form.html', {'form': form, 'title': 'Add New User'})
+
+@login_required
+def admin_user_edit(request, pk):
+    if not request.user.is_super_admin():
+        return redirect('dashboard')
+        
+    user_obj = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        form = AdminUserEditForm(request.POST, instance=user_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully.')
+            return redirect('admin_users')
+    else:
+        form = AdminUserEditForm(instance=user_obj)
+    return render(request, 'core/admin_user_form.html', {'form': form, 'title': 'Edit User'})
+
+@login_required
+def admin_user_delete(request, pk):
+    if not request.user.is_super_admin():
+        return redirect('dashboard')
+        
+    user_obj = get_object_or_404(User, pk=pk)
+    
+    # Prevent self-deletion
+    if user_obj == request.user:
+        messages.error(request, 'You cannot delete your own account.')
+        return redirect('admin_users')
+
+    if request.method == 'POST':
+        user_obj.delete()
+        messages.success(request, 'User deleted successfully.')
+        return redirect('admin_users')
+        
+    return render(request, 'core/confirm_delete.html', {'object': user_obj, 'title': 'Delete User'})
 
 @login_required
 def admin_service_add(request):

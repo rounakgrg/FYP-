@@ -62,6 +62,27 @@ class AdminUserCreationForm(UserCreationForm):
              if 'class' not in self.fields[field_name].widget.attrs:
                 self.fields[field_name].widget.attrs['class'] = 'form-control'
 
+class AdminUserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'role', 'department']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-select'}),
+            'department': forms.Select(attrs={'class': 'form-select'}),
+        }
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('Email is required.')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('A user with that email already exists.')
+        return email
+
 class ServiceCharterForm(forms.ModelForm):
     class Meta:
         model = ServiceCharter

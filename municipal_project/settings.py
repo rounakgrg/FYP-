@@ -106,7 +106,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "appcityconnect@gmail.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "") # Set this in your environment variables for security
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "kxbo jdxi frky btrc")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Authentication Backends
